@@ -7,7 +7,8 @@ long_tag = ${short_tag}--${git_commit}
 
 build: Dockerfile
 	docker build -t ${name}:${long_tag} .
-	docker tag ${name}:${long_tag} ${name}:${short_tag}
+	docker rmi ${name}:${short_tag}
+	docker tag -f ${name}:${long_tag} ${name}:${short_tag}
 	touch ${build_tool}
 
 push: build

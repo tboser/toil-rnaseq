@@ -56,21 +56,21 @@ def call_pipeline(mount, args):
         else:
             log.info('Flag "--no-clean" was used, therefore {} was not deleted.'.format(work_dir))
 
-    #DEBUG !!!
-    print("DEBUG!!!!! output dir is "+mount+" and files are:")
-    print(os.listdir(mount))
-    fail_files = [fail_file for fail_file in os.listdir(mount) if fail_file.startswith("FAIL.") and fail_file.endswith(".tar.gz")]
-    print("fail files:", ' '.join(fail_files))
-    cmd = ["mv", mount+"/"+fail_file, mount+"/"+fail_file[len("FAIL."):]]
+    log.debug("output dir is {} and files are:\n{}:".format(mount, '\n'.join(os.listdir(mount))))
+    log.debug(os.listdir(mount))
+
+    fail_files = [os.path.join(mount, x) for x in os.listdir(mount) if x.startswith('FAIL')]
+
+    log.debug("fail files: {}".format(' '.join(fail_files)))
     for fail_file in fail_files:
-        print("moving "+mount+"/"+fail_file+" to "+mount+"/"+fail_file[len("FAIL."):])
+        cmd = ["mv", os.path.join(mount, fail_file, mount, fail_file.lstrip('FAIL.'))]
+        #print("moving "+mount+"/"+fail_file+" to "+mount+"/"+fail_file[len("FAIL."):])
         try:
             subprocess.check_call(cmd) 
         except subprocess.CalledProcessError as e:
-            print(e.message, file=sys.stderr)
+            log.error(e.message)
         except Exception as e:
-            print("\nERROR: FAIL file mv exception information:" + str(e), file=sys.stderr)
-    #END DEBUG !!!!
+            log.error("\nERROR: FAIL file mv exception information: {}".format(str(e)))
 
 
 
@@ -116,13 +116,8 @@ def fileURL(sample):
 
 
 def getSampleName(sample, output_basename):
-    if output_basename:
-        name = output_basename
-    else:
-        name = os.path.basename(sample).split('.')[0]
-        if name.endswith('R1') or name.endswith('R2'):
-            return name[:-2]
-    return name
+    #very temporary, output_basename will be required.
+    return output_basename
 
 
 def formatPairs(sample_pairs, work_mount):

@@ -145,7 +145,7 @@ inputs:
       prefix: --cores
 
   output-basename:
-    type: string?
+    type: string
     doc: "Basename to use for naming the output files"
     inputBinding:
       prefix: --output-basename
