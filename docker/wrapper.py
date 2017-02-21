@@ -289,6 +289,13 @@ def main():
     require(len(sock_mount) == 1, 'Missing socket mount. Requires the following: '
                                   'docker run -v /var/run/docker.sock:/var/run/docker.sock')
     work_mount = args.work_mount
+    #create work_mount directories if they don't exist yet.
+    cmd = ["mkdir", "-p", work_mount]
+    subprocess.call(cmd)
+    curr_mount = os.path.join(os.getcwd(), work_mount)
+    cmd = ["mkdir", "-p", curr_mount]
+    subprocess.call(cmd)
+
     for samples in [args.sample_tar, args.sample_paired, args.sample_single]:
         if not samples:
             continue
