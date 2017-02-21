@@ -291,9 +291,11 @@ def main():
     work_mount = args.work_mount
     #create work_mount directories if they don't exist yet.
     cmd = ["mkdir", "-p", work_mount]
+    log.info('Creating directory: %s', work_mount)
     subprocess.call(cmd)
     curr_mount = os.path.join(os.getcwd(), work_mount)
     cmd = ["mkdir", "-p", curr_mount]
+    log.info('Creating directory: %s', curr_mount)
     subprocess.call(cmd)
 
     for samples in [args.sample_tar, args.sample_paired, args.sample_single]:
